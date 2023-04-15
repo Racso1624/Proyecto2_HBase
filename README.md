@@ -29,6 +29,6 @@ exit - Sale del programa
 
 #### Estudiantes de la Universidad del Valle de Guatemala
 
-- Oscar Barrios
+- Oscar López
 - Andrea Lam
 - Alejandro Gómez

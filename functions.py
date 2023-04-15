@@ -11,9 +11,9 @@ def scanWord(word:str):
             word = word.replace('"', '')
             return word
         
-def createFile(table_name):
+def createFile(table_name, column_families):
     hfile = open(f"./HFiles/{table_name}.json", "w")
-    hfile_content = {"Table Name":table_name}
+    hfile_content = {"Table Name":table_name, "Column Families":column_families}
     hfile_content = json.dumps(hfile_content)
     hfile.write(hfile_content)
 
