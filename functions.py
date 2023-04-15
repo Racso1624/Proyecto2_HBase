@@ -1,0 +1,17 @@
+import json
+
+def scanWord(word:str):
+    if("'" in word):
+        if(word.count("'") >= 2):
+            word = word.replace("'", '')
+            return word
+    elif('"' in word):
+        if(word.count('"') >= 2):
+            word = word.replace('"', '')
+            return word
+        
+def createFile(table_name):
+    hfile = open(f"./HFiles/{table_name}.json", "w")
+    hfile_content = {"Table Name":table_name}
+    hfile_content = json.dumps(hfile_content)
+    hfile.write(hfile_content)
