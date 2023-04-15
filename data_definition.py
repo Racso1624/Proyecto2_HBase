@@ -22,6 +22,7 @@ def put(command):
             table_name = scanWord(command_split[0])
             row_id = scanWord(command_split[1])
             column = scanWord(command_split[2])
+            value = scanWord(command_split[3])
             timestamp = int(time())
 
             if(checkFile(table_name)):
@@ -30,4 +31,10 @@ def put(command):
 
                 if(checkEnabled(data_table)):
                     column_family, qualifier = column.split(':')
-                    
+                    if(checkColumn(data_table, column_family)):
+                        data_table["Rows"][row_id] = {}
+                        data_table["Rows"][row_id][column] = {}
+                        data_table["Rows"][row_id][column] = {"value":value, "timestamp":timestamp}
+
+                        with open(f"./HFiles/{table_name}.json", "w") as file:
+                            json.dump(data_table, file, indent=4)
