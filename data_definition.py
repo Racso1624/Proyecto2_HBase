@@ -36,5 +36,7 @@ def put(command):
                         data_table["Rows"][row_id][column] = {}
                         data_table["Rows"][row_id][column] = {"value":value, "timestamp":timestamp}
 
+                        data_table["Rows"] = dict(sorted(data_table["Rows"].items()))
+
                         with open(f"./HFiles/{table_name}.json", "w") as file:
                             json.dump(data_table, file, indent=4)
