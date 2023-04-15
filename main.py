@@ -59,8 +59,8 @@ while(exit):
                 table_name = scanWord(command_split[0])
                 column_family = scanWord(command_split[1])
                 if("ERROR" not in table_name and "ERROR" not in column_family):
-                    createFile(table_name)
-            
+                    if(not checkFile(table_name)):
+                        createFile(table_name)    
 
     if(command == "exit"):
         exit = False

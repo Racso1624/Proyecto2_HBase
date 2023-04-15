@@ -1,4 +1,5 @@
 import json
+import os
 
 def scanWord(word:str):
     if("'" in word):
@@ -15,3 +16,7 @@ def createFile(table_name):
     hfile_content = {"Table Name":table_name}
     hfile_content = json.dumps(hfile_content)
     hfile.write(hfile_content)
+
+def checkFile(table_name):
+    path = f"./HFiles/{table_name}.json"
+    return os.path.exists(path)
