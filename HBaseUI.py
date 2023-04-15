@@ -138,6 +138,3 @@ class HBASEUI:
         )
 
         self.theme_index = (self.theme_index + 1) % len(themes)
-
-
-HBASEUI()
