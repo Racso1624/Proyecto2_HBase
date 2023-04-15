@@ -13,10 +13,17 @@ def scanWord(word:str):
         
 def createFile(table_name, column_families):
     hfile = open(f"./HFiles/{table_name}.json", "w")
-    hfile_content = {"Table Name":table_name, "Column Families":column_families}
-    hfile_content = json.dumps(hfile_content)
+    hfile_content = {"Table Name":table_name, "Column Families":column_families, "Is_enable":True, "Rows":[]}
+    hfile_content = json.dumps(hfile_content, indent=4)
     hfile.write(hfile_content)
 
 def checkFile(table_name):
     path = f"./HFiles/{table_name}.json"
     return os.path.exists(path)
+
+def checkEnabled(data_table):
+    return data_table["Is_enable"]
+
+def checkColumn(data_table, column):
+    if(column in data_table["Rows"]):
+        return True 

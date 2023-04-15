@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from functions import *
+from utils import *
 
 """
 Funcionalidades:

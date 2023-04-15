@@ -1,1 +1,9 @@
-{"Table Name": "resiland", "Column Families": ["data", "cursos"]}
+{
+    "Table Name": "resiland",
+    "Column Families": [
+        "data",
+        "cursos"
+    ],
+    "Is_enable": true,
+    "Rows": []
+}
