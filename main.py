@@ -18,6 +18,10 @@ while(exit):
         get(command)
     elif(command.startswith("scan")):
         scan(command)
+    elif(command.startswith("enable")):
+        enable(command)
+    elif(command.startswith("disable")):
+        disable(command)
     elif(command.startswith("count")):
         count(command)
     elif(command == "exit"):
