@@ -156,6 +156,7 @@ def alter(command):
                                         json.dump(data_table, file, indent=4)
                     else:
                         print("Table not enable")
+                        
 def describe(command):
     if "describe " in command:
         table_name = scanWord(command.replace("describe ", ""))
@@ -187,7 +188,27 @@ def truncate(command):
             print("La tabla paso a disable")
             drop(f"drop {table_name}")
             print("Se hizo drop a la tabla")
-            create(f"create {table_name},column_family1,column_family2")
+            create(f"create '{table_name}','column_family1','column_family2'") #aqui solo me falta acceder a las column families para mandarlas al create
             print("Se realizo el create")
         else:
             print("Table does not exist.")
+
+def drop(command):
+    if "drop " in command:
+        command = command.replace("drop ", "")
+        table_name = scanWord(command)
+        if checkFile(table_name):
+            os.remove(f"./HFiles/{table_name}.json")
+            print(f"Dropped table {table_name}.")
+        else:
+            print(f"Table {table_name} does not exist.")
+
+
+def drop_all(command):
+    if "drop_all" in command:
+        tables = os.listdir("./HFiles")
+        for table in tables:
+            os.remove(f"./HFiles/{table}")
+
+import json
+

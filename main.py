@@ -30,5 +30,9 @@ while(exit):
         describe(command)
     elif(command.startswith("truncate")):
         truncate(command)
+    elif(command.startswith("drop")):
+        drop(command)
+    elif(command.startswith("drop_all")):
+        drop_all(command)
     elif(command == "exit"):
         exit = False
