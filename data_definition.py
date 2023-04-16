@@ -183,39 +183,40 @@ def count(command):
                 print("Table not enable")
                 
 def alter(command):
-    if "alter " in command:
+    if("alter " in command):
         command = command.replace("alter ", "")
         command_split = command.split(',')
-        if len(command_split) == 2:
+        if(len(command_split) >= 3):
             table_name = scanWord(command_split[0])
-            column_action = command_split[1].split()
-            if len(column_action) == 2:
-                action = column_action[0]
-                column_family = scanWord(column_action[1])
-                if checkFile(table_name):
-                    with open(f"./HFiles/{table_name}.json") as file:
-                        data_table = json.load(file)
-                    if checkEnabled(data_table):
-                        if action == "drop":
-                            if checkColumn(data_table, column_family):
-                                data_table["Column Families"].remove(column_family)
+            action = scanWord(command_split[1])
+            column_family = scanWord(command_split[2])
+            if(checkFile(table_name)):
+                with open(f"./HFiles/{table_name}.json") as file:
+                    data_table = json.load(file)
+                if(checkEnabled(data_table)):
+                    if(action == "delete"):
+                        if(checkColumn(data_table, column_family)):
+                            data_table["Column Families"].remove(column_family)
+                            for row_id in data_table["Rows"]:
+                                key_list =  list(data_table["Rows"][row_id].keys())
+                                for i in key_list:
+                                    if(column_family in i):
+                                        del data_table["Rows"][row_id][i]
+                                    
+                            with open(f"./HFiles/{table_name}.json", "w") as file:
+                                json.dump(data_table, file, indent=4)
+                    elif action == "update":
+                        new_column_family = scanWord(command_split[3])
+                        if checkColumn(data_table, column_family):
+                            if not checkColumn(data_table, new_column_family):
+                                data_table["Column Families"][data_table["Column Families"].index(column_family)] = new_column_family
                                 for row_id in data_table["Rows"]:
                                     if column_family in data_table["Rows"][row_id]:
-                                        del data_table["Rows"][row_id][column_family]
+                                        data_table["Rows"][row_id][new_column_family] = data_table["Rows"][row_id].pop(column_family)
                                 with open(f"./HFiles/{table_name}.json", "w") as file:
                                     json.dump(data_table, file, indent=4)
-                        elif action == "modify":
-                            new_column_family = scanWord(column_action[1].split()[1])
-                            if checkColumn(data_table, column_family):
-                                if not checkColumn(data_table, new_column_family):
-                                    data_table["Column Families"][data_table["Column Families"].index(column_family)] = new_column_family
-                                    for row_id in data_table["Rows"]:
-                                        if column_family in data_table["Rows"][row_id]:
-                                            data_table["Rows"][row_id][new_column_family] = data_table["Rows"][row_id].pop(column_family)
-                                    with open(f"./HFiles/{table_name}.json", "w") as file:
-                                        json.dump(data_table, file, indent=4)
-                    else:
-                        print("Table not enable")
+                else:
+                    print("Table not enable")
                         
 def describe(command):
     if "describe " in command:
@@ -269,6 +270,3 @@ def drop_all(command):
         tables = os.listdir("./HFiles")
         for table in tables:
             os.remove(f"./HFiles/{table}")
-
-import json
-

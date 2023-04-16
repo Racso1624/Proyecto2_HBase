@@ -1,8 +1,8 @@
 {
     "Table Name": "resiland",
     "Column Families": [
-        "cursos",
-        "data"
+        "data",
+        "cursos"
     ],
     "Is_enable": true,
     "Rows": {
