@@ -42,6 +42,7 @@ def put(command):
 
             # Se verifica que el archivo exista
             if(checkFile(table_name)):
+                # Se obtienen los datos del HFile
                 with open(f"./HFiles/{table_name}.json") as file:
                     data_table = json.load(file)
                 # Se verfica que la tabla este enable
@@ -65,63 +66,94 @@ def put(command):
                             json.dump(data_table, file, indent=4)
                 else:
                     print("Table not enable")
-                    
+
+# Funcion para el comando get       
 def get(command):
+    # Se limpia la entrada del comando
     if("get " in command):
         command = command.replace("get ", "")
         command_split = command.split(',')
+        # Se verifica y separa el comando
         if(len(command_split) == 2):
+            # Se obtienen los valores del comando
             table_name = scanWord(command_split[0])
             row_id = scanWord(command_split[1])
+            # Se verifica que el archivo exista
             if(checkFile(table_name)):
+                # Se obtienen los datos del HFile
                 with open(f"./HFiles/{table_name}.json") as file:
                     data_table = json.load(file)
-
+                # Se verfica que la tabla este enable
                 if(checkEnabled(data_table)):
+                    # Se verifica que el row id exista
                     if(checkRowId(data_table, row_id)):
+                        # Se itera en todas las rows para ese row id
                         row_info = data_table["Rows"][row_id]
                         for i in row_info:
                             print(i + " timestamp=" + str(row_info[i]["timestamp"]) + ", value=" + row_info[i]["value"])
                 else:
                     print("Table not enable")
-                    
+
+# Funcion para el comando scan               
 def scan(command):
+    # Se limpia la entrada del comando
     if("scan " in command):
+        # Se verifica y separa el comando
+        # Se obtienen los valores del comando
         command = command.replace("scan ", "")
         table_name = scanWord(command)
+        # Se verifica que el archivo exista
         if(checkFile(table_name)):
+            # Se obtienen los datos del HFile
             with open(f"./HFiles/{table_name}.json") as file:
                 data_table = json.load(file)
+            # Se verfica que la tabla este enable
             if(checkEnabled(data_table)):
+                # Se itera en todas las rows de la tabla
                 rows_info = data_table["Rows"]
                 for i in rows_info:
                     for j in data_table["Rows"][i]:
                         print(i + " column=" + j +", timestamp=" + str(rows_info[i][j]["timestamp"]) + ", value=" + rows_info[i][j]["value"])
             else:
                 print("Table not enable")
-                
+
+# Funcion para el comando enable            
 def enable(command):
+    # Se limpia la entrada del comando
     if("enable " in command):
+        # Se verifica y separa el comando
+        # Se obtienen los valores del comando
         command = command.replace("enable ", "")
         table_name = scanWord(command)
+        # Se verifica que el archivo exista
         if(checkFile(table_name)):
+            # Se obtienen los datos del HFile
             with open(f"./HFiles/{table_name}.json") as file:
                 data_table = json.load(file)
+            # Si la tabla esta disable entonces la cambia a enable
             if(not checkEnabled(data_table)):
                 data_table["Is_enable"] = True
 
+                # Se reescribe el archivo
                 with open(f"./HFiles/{table_name}.json", "w") as file:
                     json.dump(data_table, file, indent=4)
             else:
-                print("Table not enable")
+                print("Table is enable")
 
+# Funcion para el comando disable 
 def disable(command):
+    # Se limpia la entrada del comando
     if("disable " in command):
+        # Se verifica y separa el comando
+        # Se obtienen los valores del comando
         command = command.replace("disable ", "")
         table_name = scanWord(command)
+        # Se verifica que el archivo exista
         if(checkFile(table_name)):
+            # Se obtienen los datos del HFile
             with open(f"./HFiles/{table_name}.json") as file:
                 data_table = json.load(file)
+            # Si la tabla esta enable entonces la cambia a disable
             if(checkEnabled(data_table)):
                 data_table["Is_enable"] = False
 
@@ -130,14 +162,22 @@ def disable(command):
             else:
                 print("Table not enable")
 
+# Funcion para el comando count 
 def count(command):
+    # Se limpia la entrada del comando
     if("count " in command):
+        # Se verifica y separa el comando
+        # Se obtienen los valores del comando
         command = command.replace("count ", "")
         table_name = scanWord(command)
+        # Se verifica que el archivo exista
         if(checkFile(table_name)):
+            # Se obtienen los datos del HFile
             with open(f"./HFiles/{table_name}.json") as file:
                 data_table = json.load(file)
+            # Verifica si la tabla esta enable
             if(checkEnabled(data_table)):
+                # Retorna el valor del count
                 print(len(data_table["Rows"]))
             else:
                 print("Table not enable")
