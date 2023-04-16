@@ -141,3 +141,22 @@ def alter(command):
                                             data_table["Rows"][row_id][new_column_family] = data_table["Rows"][row_id].pop(column_family)
                                     with open(f"./HFiles/{table_name}.json", "w") as file:
                                         json.dump(data_table, file, indent=4)
+def describe(command):
+    if "describe " in command:
+        table_name = scanWord(command.replace("describe ", ""))
+        if checkFile(table_name):
+            with open(f"./HFiles/{table_name}.json") as file:
+                data_table = json.load(file)
+            print("Table Name: ", data_table["Table Name"])
+            print("Column Families: ")
+            for cf in data_table["Column Families"]:
+                print(" - ", cf)
+            print("Is_enable: ", data_table["Is_enable"])
+            print("Rows: ")
+            for row_id in data_table["Rows"]:
+                print(" - ", row_id)
+                for col in data_table["Rows"][row_id]:
+                    print("   - ", col)
+    else:
+        print("Invalid command")
+

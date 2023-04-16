@@ -26,6 +26,7 @@ while(exit):
         count(command)
     elif(command.startswith("alter")):
         alter(command)
-        print("Entro")
+    elif(command.startswith("describe")):
+        describe(command)
     elif(command == "exit"):
         exit = False
