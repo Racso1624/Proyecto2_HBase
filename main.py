@@ -14,6 +14,8 @@ while(exit):
         create(command)   
     elif(command.startswith("put")):
         put(command)
+    elif(command.startswith("count")):
+        count(command)
 
     elif(command == "exit"):
         exit = False

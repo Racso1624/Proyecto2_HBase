@@ -36,8 +36,19 @@ def put(command):
                             data_table["Rows"][row_id] = {}
                         data_table["Rows"][row_id][column] = {}
                         data_table["Rows"][row_id][column] = {"value":value, "timestamp":timestamp}
-
+                        
+                        data_table["Rows"][row_id] = dict(sorted(data_table["Rows"][row_id].items()))
                         data_table["Rows"] = dict(sorted(data_table["Rows"].items()))
 
                         with open(f"./HFiles/{table_name}.json", "w") as file:
                             json.dump(data_table, file, indent=4)
+
+def count(command):
+    if("count " in command):
+        command = command.replace("count ", "")
+        table_name = scanWord(command)
+        if(checkFile(table_name)):
+            with open(f"./HFiles/{table_name}.json") as file:
+                data_table = json.load(file)
+            if(checkEnabled(data_table)):
+                print(len(data_table["Rows"]))
