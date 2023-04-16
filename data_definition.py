@@ -1,5 +1,6 @@
 from utils import *
 from time import *
+import os
 
 def create(command):
     if("create " in command):
@@ -176,4 +177,17 @@ def describe(command):
                 print("Table not enable")
     else:
         print("Invalid command")
-
+                   
+def truncate(command):
+    if "truncate " in command:
+        command = command.replace("truncate ", "")
+        table_name = scanWord(command)
+        if checkFile(table_name):
+            disable(f"disable {table_name}")
+            print("La tabla paso a disable")
+            drop(f"drop {table_name}")
+            print("Se hizo drop a la tabla")
+            create(f"create {table_name},column_family1,column_family2")
+            print("Se realizo el create")
+        else:
+            print("Table does not exist.")

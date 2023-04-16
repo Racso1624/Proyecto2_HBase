@@ -28,5 +28,7 @@ while(exit):
         alter(command)
     elif(command.startswith("describe")):
         describe(command)
+    elif(command.startswith("truncate")):
+        truncate(command)
     elif(command == "exit"):
         exit = False
