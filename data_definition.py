@@ -42,7 +42,9 @@ def put(command):
 
                         with open(f"./HFiles/{table_name}.json", "w") as file:
                             json.dump(data_table, file, indent=4)
-
+                else:
+                    print("Table not enable")
+                    
 def get(command):
     if("get " in command):
         command = command.replace("get ", "")
@@ -59,7 +61,9 @@ def get(command):
                         row_info = data_table["Rows"][row_id]
                         for i in row_info:
                             print(i + " timestamp=" + str(row_info[i]["timestamp"]) + ", value=" + row_info[i]["value"])
-
+                else:
+                    print("Table not enable")
+                    
 def scan(command):
     if("scan " in command):
         command = command.replace("scan ", "")
@@ -72,7 +76,9 @@ def scan(command):
                 for i in rows_info:
                     for j in data_table["Rows"][i]:
                         print(i + " column=" + j +", timestamp=" + str(rows_info[i][j]["timestamp"]) + ", value=" + rows_info[i][j]["value"])
-
+            else:
+                print("Table not enable")
+                
 def enable(command):
     if("enable " in command):
         command = command.replace("enable ", "")
@@ -85,6 +91,8 @@ def enable(command):
 
                 with open(f"./HFiles/{table_name}.json", "w") as file:
                     json.dump(data_table, file, indent=4)
+            else:
+                print("Table not enable")
 
 def disable(command):
     if("disable " in command):
@@ -98,6 +106,8 @@ def disable(command):
 
                 with open(f"./HFiles/{table_name}.json", "w") as file:
                     json.dump(data_table, file, indent=4)
+            else:
+                print("Table not enable")
 
 def count(command):
     if("count " in command):
@@ -108,6 +118,8 @@ def count(command):
                 data_table = json.load(file)
             if(checkEnabled(data_table)):
                 print(len(data_table["Rows"]))
+            else:
+                print("Table not enable")
                 
 def alter(command):
     if "alter " in command:
@@ -141,22 +153,27 @@ def alter(command):
                                             data_table["Rows"][row_id][new_column_family] = data_table["Rows"][row_id].pop(column_family)
                                     with open(f"./HFiles/{table_name}.json", "w") as file:
                                         json.dump(data_table, file, indent=4)
+                    else:
+                        print("Table not enable")
 def describe(command):
     if "describe " in command:
         table_name = scanWord(command.replace("describe ", ""))
         if checkFile(table_name):
             with open(f"./HFiles/{table_name}.json") as file:
                 data_table = json.load(file)
-            print("Table Name: ", data_table["Table Name"])
-            print("Column Families: ")
-            for cf in data_table["Column Families"]:
-                print(" - ", cf)
-            print("Is_enable: ", data_table["Is_enable"])
-            print("Rows: ")
-            for row_id in data_table["Rows"]:
-                print(" - ", row_id)
-                for col in data_table["Rows"][row_id]:
-                    print("   - ", col)
+            if checkEnabled(data_table):
+                print("Table Name: ", data_table["Table Name"])
+                print("Column Families: ")
+                for cf in data_table["Column Families"]:
+                    print(" - ", cf)
+                print("Is_enable: ", data_table["Is_enable"])
+                print("Rows: ")
+                for row_id in data_table["Rows"]:
+                    print(" - ", row_id)
+                    for col in data_table["Rows"][row_id]:
+                        print("   - ", col)
+            else:
+                print("Table not enable")
     else:
         print("Invalid command")
 
