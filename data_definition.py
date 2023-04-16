@@ -43,6 +43,23 @@ def put(command):
                         with open(f"./HFiles/{table_name}.json", "w") as file:
                             json.dump(data_table, file, indent=4)
 
+def get(command):
+    if("get " in command):
+        command = command.replace("get ", "")
+        command_split = command.split(',')
+        if(len(command_split) == 2):
+            table_name = scanWord(command_split[0])
+            row_id = scanWord(command_split[1])
+            if(checkFile(table_name)):
+                with open(f"./HFiles/{table_name}.json") as file:
+                    data_table = json.load(file)
+
+                if(checkEnabled(data_table)):
+                    if(checkRowId(data_table, row_id)):
+                        row_info = data_table["Rows"][row_id]
+                        for i in row_info:
+                            print(i + " timestamp=" + str(row_info[i]["timestamp"]) + ", value=" + row_info[i]["value"])
+
 def count(command):
     if("count " in command):
         command = command.replace("count ", "")
