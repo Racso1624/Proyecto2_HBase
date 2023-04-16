@@ -60,6 +60,19 @@ def get(command):
                         for i in row_info:
                             print(i + " timestamp=" + str(row_info[i]["timestamp"]) + ", value=" + row_info[i]["value"])
 
+def scan(command):
+    if("scan " in command):
+        command = command.replace("scan ", "")
+        table_name = scanWord(command)
+        if(checkFile(table_name)):
+            with open(f"./HFiles/{table_name}.json") as file:
+                data_table = json.load(file)
+            if(checkEnabled(data_table)):
+                rows_info = data_table["Rows"]
+                for i in rows_info:
+                    for j in data_table["Rows"][i]:
+                        print(i + " column=" + j +", timestamp=" + str(rows_info[i][j]["timestamp"]) + ", value=" + rows_info[i][j]["value"])
+
 def count(command):
     if("count " in command):
         command = command.replace("count ", "")

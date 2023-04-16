@@ -16,6 +16,8 @@ while(exit):
         put(command)
     elif(command.startswith("get")):
         get(command)
+    elif(command.startswith("scan")):
+        scan(command)
     elif(command.startswith("count")):
         count(command)
     elif(command == "exit"):
