@@ -32,7 +32,8 @@ def put(command):
                 if(checkEnabled(data_table)):
                     column_family, qualifier = column.split(':')
                     if(checkColumn(data_table, column_family)):
-                        data_table["Rows"][row_id] = {}
+                        if(not checkRowId(data_table, row_id)):
+                            data_table["Rows"][row_id] = {}
                         data_table["Rows"][row_id][column] = {}
                         data_table["Rows"][row_id][column] = {"value":value, "timestamp":timestamp}
 

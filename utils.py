@@ -27,3 +27,11 @@ def checkEnabled(data_table):
 def checkColumn(data_table, column):
     if(column in data_table["Column Families"]):
         return True 
+    else:
+        return False
+
+def checkRowId(data_table, row_id):
+    if(row_id in data_table["Rows"]):
+        return True
+    else:
+        return False
