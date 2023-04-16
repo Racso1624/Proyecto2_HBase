@@ -1,46 +1,66 @@
+# Proyecto 2
+# Simulacion de HBase
+
 from utils import *
 from time import *
 import os
 
+# Funcion para el comando create
 def create(command):
+    # Se limpia la entrada del comando
     if("create " in command):
         command = command.replace("create ", "")
         command_split = command.split(',')
+        # Se verifica y separa el comando
         if(len(command_split) >= 2):
+            # Se obtienen los valores del comando
             table_name = scanWord(command_split[0])
             column_families = []
+            # Se agregan todas las column families que puedan existir
             for i in range(1, len(command_split)):
                 column_families.append(scanWord(command_split[i]))
+            # Se verifica que el archivo no exista
             if("ERROR" not in table_name):
                 if(not checkFile(table_name)):
+                    # Se crea el archivo
                     createFile(table_name, column_families) 
 
+# Funcion para el comando put
 def put(command):
+    # Se limpia la entrada del comando
     if("put " in command):
         command = command.replace("put ", "")
         command_split = command.split(',')
+        # Se verifica y separa el comando
         if(len(command_split) >= 4):
+            # Se obtienen los valores del comando
             table_name = scanWord(command_split[0])
             row_id = scanWord(command_split[1])
             column = scanWord(command_split[2])
             value = scanWord(command_split[3])
             timestamp = int(time())
 
+            # Se verifica que el archivo exista
             if(checkFile(table_name)):
                 with open(f"./HFiles/{table_name}.json") as file:
                     data_table = json.load(file)
-
+                # Se verfica que la tabla este enable
                 if(checkEnabled(data_table)):
                     column_family, qualifier = column.split(':')
+                    # Se verifica que la column family exista
                     if(checkColumn(data_table, column_family)):
+                        # Se verifica que el row id exista para crearla
                         if(not checkRowId(data_table, row_id)):
                             data_table["Rows"][row_id] = {}
+                        # Se crea la nueva row
                         data_table["Rows"][row_id][column] = {}
+                        # Se guarda la celda para la row
                         data_table["Rows"][row_id][column] = {"value":value, "timestamp":timestamp}
-                        
+                        # Se ordenan los datos dentro de sus rows
                         data_table["Rows"][row_id] = dict(sorted(data_table["Rows"][row_id].items()))
+                        # Se ordenan los datos dentro de los row ids
                         data_table["Rows"] = dict(sorted(data_table["Rows"].items()))
-
+                        # Se reescribe el archivo
                         with open(f"./HFiles/{table_name}.json", "w") as file:
                             json.dump(data_table, file, indent=4)
                 else:
