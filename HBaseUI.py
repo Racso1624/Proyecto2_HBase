@@ -3,6 +3,8 @@ from tkinter import ttk
 from utils import *
 from data_definition import *
 from Constants import *
+from PIL import Image, ImageTk
+
 
 """
 Funcionalidades:
@@ -33,6 +35,7 @@ class HBASEUI:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("HBase")
+
         self.root.pack_propagate(0)
         self.root.geometry("800x700")
         self.root.minsize(800, 700)
@@ -206,6 +209,7 @@ class HBASEUI:
                 len(input_text) >= 3
                 and not self.tab_pressed
                 and input_text[-1].isalpha()
+                and self.shell_started == True
             ):
                 matching_commands = [
                     cmd for cmd in commands if cmd.startswith(input_text)
