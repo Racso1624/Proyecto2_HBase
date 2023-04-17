@@ -1,27 +1,38 @@
 {
-  "Table Name": "resiland",
-  "Column Families": ["data", "cursos"],
-  "Is_enabled": true,
-  "Rows": {
-    "Oscar": {
-      "data:age": {
-        "value": "21",
-        "timestamp": 1681606286
-      },
-      "data:birthday": {
-        "value": "30/12",
-        "timestamp": 1681607589
-      },
-      "data:hometown": {
-        "value": "Reu",
-        "timestamp": 1681606860
-      }
-    },
-    "Pedro": {
-      "data:age": {
-        "value": "22",
-        "timestamp": 1681606519
-      }
+    "Table Name": "resiland",
+    "Column Families": [
+        "data",
+        "cursos"
+    ],
+    "Is_enabled": true,
+    "Rows": {
+        "Oscar": {
+            "cursos:bases": {
+                "value": "100",
+                "timestamp": 1681770629
+            },
+            "data:age": {
+                "value": "21",
+                "timestamp": 1681606286
+            },
+            "data:birthday": {
+                "value": "30/12",
+                "timestamp": 1681607589
+            },
+            "data:hometown": {
+                "value": "Reu",
+                "timestamp": 1681606860
+            }
+        },
+        "Pedro": {
+            "data:age": {
+                "value": "22",
+                "timestamp": 1681606519
+            },
+            "data:hometown": {
+                "value": "Guatemala",
+                "timestamp": 1681768976
+            }
+        }
     }
-  }
 }

@@ -323,9 +323,23 @@ def alter(command):
                                 data_table["Column Families"][
                                     data_table["Column Families"].index(column_family)
                                 ] = new_column_family
+                                # Busca los valores de cada row id con esa columna
                                 for row_id in data_table["Rows"]:
-                                    for column in data_table["Rows"][row_id]:
-                                        print(data_table["Rows"][row_id][column])
+                                    key_list = list(data_table["Rows"][row_id].keys())
+                                    for i in key_list:
+                                        # Si encuentra la columna la elimina
+                                        if column_family in i:
+                                            value = data_table["Rows"][row_id][i]
+                                            del data_table["Rows"][row_id][i]
+                                            column, qualifier = i.split(":")
+                                            new_column = new_column_family + ":" + qualifier
+                                            data_table["Rows"][row_id][new_column] = value
+                                            # alter 'resiland','update','data','datos'
+                                    # Se ordenan los datos dentro de sus rows
+                                    data_table["Rows"][row_id] = dict(
+                                        sorted(data_table["Rows"][row_id].items())
+                                    )
+                                # Reescribe el archivo
                                 with open(f"./HFiles/{table_name}.json", "w") as file:
                                     json.dump(data_table, file, indent=4)
                                 return f"Column family '{column_family}' updated to '{new_column_family}' in table '{table_name}'."
@@ -355,11 +369,6 @@ def describe(command):
                 for cf in data_table["Column Families"]:
                     result.append(f" - {cf}")
                 result.append(f"Is_enabled: {data_table['Is_enabled']}")
-                result.append("Rows:")
-                for row_id in data_table["Rows"]:
-                    result.append(f" - {row_id}")
-                    for col in data_table["Rows"][row_id]:
-                        result.append(f"   - {col}")
                 return "\n".join(result)
             else:
                 return "Table not enabled"
