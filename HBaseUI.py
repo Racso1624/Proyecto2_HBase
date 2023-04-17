@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from utils import *
 from data_definition import *
+from Constants import *
 
 """
 Funcionalidades:
