@@ -73,24 +73,7 @@ class HBASEUI:
         self.tab_pressed = False
         self.suggestion_label = tk.Label(self.root, font=("Arial", 12), fg="gray")
         self.suggestion_label.place(x=20, y=70)
-        self.commands = [
-            "create",
-            "put",
-            "get",
-            "scan",
-            "enable",
-            "disable",
-            "count",
-            "alter",
-            "describe",
-            "truncate",
-            "drop",
-            "drop_all",
-            "clear",
-            "cls",
-            "exit",
-            "help",
-        ]
+
         self.current_autocomplete = None
 
         self.shell_started = False
@@ -247,6 +230,3 @@ class HBASEUI:
             self.current_autocomplete = None
             self.suggestion_label.config(text="")
             return "break"
-
-
-HBASEUI()
