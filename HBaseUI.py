@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from utils import *
+from data_definition import *
 
 """
 Funcionalidades:
@@ -14,6 +15,15 @@ Keywords:
 
 - clear = limpiar la consola
 - exit = salir del programa
+- help = mostrar comandos
+- create
+- list
+- disable
+- Is_enabled
+- alter
+- drop
+- drop all
+- describe
 
 """
 
@@ -45,11 +55,6 @@ class HBASEUI:
 
         self.text_box.bind("<Return>", self.run_command)
 
-        self.submit_button = ttk.Button(
-            self.root, text="RUN", command=self.run_command, style="TButton"
-        )
-        self.submit_button.pack(padx=20, pady=20)
-
         self.result_text = tk.Text(
             self.root,
             font=("Courier", 12),
@@ -60,21 +65,115 @@ class HBASEUI:
         )
         self.result_text.pack(expand=True, fill="both", padx=20, pady=20)
         self.result_text.configure(state="disabled")
+        self.text_box.pack(padx=20, pady=20)
+        self.text_box.bind("<Return>", self.run_command)
+        self.text_box.bind("<KeyRelease>", self.autocomplete)
+        self.text_box.bind("<Tab>", self.tab_complete)
+        self.tab_pressed = False
+        self.suggestion_label = tk.Label(self.root, font=("Arial", 12), fg="gray")
+        self.suggestion_label.place(x=20, y=70)
+        self.commands = [
+            "create",
+            "put",
+            "get",
+            "scan",
+            "enable",
+            "disable",
+            "count",
+            "alter",
+            "describe",
+            "truncate",
+            "drop",
+            "drop_all",
+            "clear",
+            "cls",
+            "exit",
+            "help",
+        ]
+        self.current_autocomplete = None
+
+        self.shell_started = False
+        self.first_hbase_shell = True
         self.command_counter = 0
         self.root.mainloop()
 
+    def init_message(self):
+        self.result_text.configure(state="normal")
+        self.result_text.insert(
+            "end",
+            "\nHBase Shell; enter 'help<RETURN>' for list of supported commands.\n"
+            'Type "exit<RETURN>" to leave the HBase Shell\n'
+            "Version Ale-Racso-Lam\n",
+        )
+
+    def show_help(self):
+        help_text = ""
+        for command in self.commands:
+            help_text += f"{command}\n"
+        return help_text
+
     def run_command(self, event=None):
         input_text = self.text_box.get().strip()
-
         self.text_box.delete(0, "end")
+        if not self.shell_started:
+            if input_text.lower() == "hbase shell" and self.first_hbase_shell:
+                self.shell_started = True
+                self.first_hbase_shell = False
+                self.result_text.configure(state="normal")
+                self.result_text.delete("1.0", "end")
+                self.result_text.insert("end", f"AleRacsoLam> {input_text}\n")
+                self.result_text.configure(state="disabled")
+                self.init_message()
+            else:
+                self.result_text.configure(state="normal")
+                self.result_text.insert(
+                    "end", f"AleRacsoLam> use 'hbase shell' to start\n"
+                )
+                self.result_text.configure(state="disabled")
+            return
+        if input_text.lower() == "help":
+            self.Execute(self.show_help())
+            return
 
         if input_text.lower() == "clear":
             self.result_text.configure(state="normal")
             self.result_text.delete("1.0", "end")
             self.result_text.configure(state="disabled")
             self.command_counter = 0
+        elif input_text.lower() == "cls":
+            self.result_text.configure(state="normal")
+            self.result_text.delete("1.0", "end")
+            self.result_text.configure(state="disabled")
+            self.command_counter = 0
+        elif input_text.lower() == "help":
+            self.show_help()
+        elif "create" in input_text.lower():
+            self.Execute(create(input_text), input_text.lower())
+        elif "put" in input_text.lower():
+            self.Execute(put(input_text), input_text.lower())
+        elif "get" in input_text.lower():
+            self.Execute(get(input_text), input_text.lower())
+        elif "scan" in input_text.lower():
+            self.Execute(scan(input_text), input_text.lower())
+        elif "enable" in input_text.lower():
+            self.Execute(enable(input_text), input_text.lower())
+        elif "disable" in input_text.lower():
+            self.Execute(disable(input_text), input_text.lower())
+        elif "count" in input_text.lower():
+            self.Execute(count(input_text), input_text.lower())
+        elif "alter" in input_text.lower():
+            self.Execute(alter(input_text), input_text.lower())
+        elif "describe" in input_text.lower():
+            self.Execute(describe(input_text), input_text.lower())
+        elif "truncate" in input_text.lower():
+            self.Execute(truncate(input_text), input_text.lower())
+        elif "drop" in input_text.lower():
+            self.Execute(drop(input_text), input_text.lower())
+        elif "drop_all" in input_text.lower():
+            self.Execute(drop_all(input_text), input_text.lower())
         elif input_text.lower() == "exit":
             self.root.destroy()
+
         else:
             formatted_counter = f"{self.command_counter:03}"
             self.result_text.configure(state="normal")
@@ -138,3 +237,50 @@ class HBASEUI:
         )
 
         self.theme_index = (self.theme_index + 1) % len(themes)
+
+    def Execute(self, function, input_text=""):
+        response = function
+        formatted_counter = f"{self.command_counter:03}"
+        self.result_text.configure(state="normal")
+        self.result_text.insert(
+            "end", f"hbase(main):{formatted_counter}:0> {input_text}\n{response}\n"
+        )
+        self.result_text.configure(state="disabled")
+        self.result_text.see("end")
+        self.command_counter += 1
+
+    def autocomplete(self, event=None):
+        if event.keysym != "Tab":
+            self.tab_pressed = False
+            input_text = self.text_box.get().strip().lower()
+            if (
+                len(input_text) >= 3
+                and not self.tab_pressed
+                and input_text[-1].isalpha()
+            ):
+                matching_commands = [
+                    cmd for cmd in self.commands if cmd.startswith(input_text)
+                ]
+                if matching_commands:
+                    self.current_autocomplete = matching_commands[0]
+                else:
+                    self.current_autocomplete = None
+            else:
+                self.current_autocomplete = None
+            if self.current_autocomplete:
+                self.suggestion_label.config(text=self.current_autocomplete)
+            else:
+                self.suggestion_label.config(text="")
+        else:
+            self.tab_pressed = True
+
+    def tab_complete(self, event=None):
+        if self.current_autocomplete:
+            self.text_box.delete(0, "end")
+            self.text_box.insert(0, self.current_autocomplete)
+            self.current_autocomplete = None
+            self.suggestion_label.config(text="")
+            return "break"
+
+
+HBASEUI()

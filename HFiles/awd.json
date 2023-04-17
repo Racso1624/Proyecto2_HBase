@@ -1,0 +1,8 @@
+{
+    "Table Name": "awd",
+    "Column Families": [
+        "awd"
+    ],
+    "Is_enabled": true,
+    "Rows": {}
+}

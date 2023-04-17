@@ -7,8 +7,8 @@ Proyecto que simula HBase Shell en Python.
 ## Features
 
 - Escrito en Python
-- Funciones: Create, List, Disable, Is_enabled, Alter, Drop, Drop All, Describe
-- Put, Get, Scan, Scan, Delete, Deleteall, Count, Truncate.
+- Funciones: Create, List, Disable, Is_enabled, Alter, Drop, Drop All, Describe,
+- Manipulación: Put, Get, Scan, Scan, Delete, Deleteall, Count, Truncate.
 
 
 ## Ejecución
@@ -21,7 +21,23 @@ Correr archivo main.py
 
 ```
 clear - Limpia la pantalla
+cls - Limpia la pantalla
 exit - Sale del programa
+create
+list
+disable
+enable
+alter
+drop
+dropall
+describe
+put
+get
+scan
+delete
+deletall
+count
+truncate
 ```
 
 
