@@ -332,8 +332,12 @@ def alter(command):
                                             value = data_table["Rows"][row_id][i]
                                             del data_table["Rows"][row_id][i]
                                             column, qualifier = i.split(":")
-                                            new_column = new_column_family + ":" + qualifier
-                                            data_table["Rows"][row_id][new_column] = value
+                                            new_column = (
+                                                new_column_family + ":" + qualifier
+                                            )
+                                            data_table["Rows"][row_id][
+                                                new_column
+                                            ] = value
                                             # alter 'resiland','update','data','datos'
                                     # Se ordenan los datos dentro de sus rows
                                     data_table["Rows"][row_id] = dict(
@@ -342,14 +346,19 @@ def alter(command):
                                 # Reescribe el archivo
                                 with open(f"./HFiles/{table_name}.json", "w") as file:
                                     json.dump(data_table, file, indent=4)
+                                print("xd")
                                 return f"Column family '{column_family}' updated to '{new_column_family}' in table '{table_name}'."
                             else:
+                                print("xd2")
                                 return f"New column family '{new_column_family}' already exists in table '{table_name}'."
                         else:
+                            print("xd3")
                             return f"Column family '{column_family}' does not exist in table '{table_name}'."
                 else:
+                    print("xd4")
                     return f"Table '{table_name}' is not enable."
             else:
+                print("xd5")
                 return f"Table '{table_name}' does not exist."
         else:
             return "Invalid command."

@@ -48,7 +48,7 @@ class HBASEUI:
 
         self.style = ttk.Style()
         self.style.configure(
-            "TEntry", foreground="white", background="black", font=("Arial", 12)
+            "TEntry", foreground="black", background="black", font=("Arial", 12)
         )
 
         self.style.configure(
