@@ -109,7 +109,7 @@ class HBASEUI:
 
     def show_help(self):
         help_text = ""
-        for command in self.commands:
+        for command in commands:
             help_text += f"{command}\n"
         return help_text
 
@@ -225,7 +225,7 @@ class HBASEUI:
                 and input_text[-1].isalpha()
             ):
                 matching_commands = [
-                    cmd for cmd in self.commands if cmd.startswith(input_text)
+                    cmd for cmd in commands if cmd.startswith(input_text)
                 ]
                 if matching_commands:
                     self.current_autocomplete = matching_commands[0]

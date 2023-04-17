@@ -32,3 +32,22 @@ themes = [
         "button_bg": "black",
     },
 ]
+
+commands = [
+    "create",
+    "put",
+    "get",
+    "scan",
+    "enable",
+    "disable",
+    "count",
+    "alter",
+    "describe",
+    "truncate",
+    "drop",
+    "drop_all",
+    "clear",
+    "cls",
+    "exit",
+    "help",
+]
