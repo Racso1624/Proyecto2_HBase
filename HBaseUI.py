@@ -13,6 +13,7 @@ Funcionalidades:
 - cambiar tema
 - mandar comandos a la consola con enter o botón
 - simulación visual de HBase Shell
+- autocomplete
 
 Keywords:
 
@@ -35,7 +36,6 @@ class HBASEUI:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title("HBase")
-
         self.root.pack_propagate(0)
         self.root.geometry("800x700")
         self.root.minsize(800, 700)
@@ -76,9 +76,7 @@ class HBASEUI:
         self.tab_pressed = False
         self.suggestion_label = tk.Label(self.root, font=("Arial", 12), fg="gray")
         self.suggestion_label.place(x=20, y=70)
-
         self.current_autocomplete = None
-
         self.shell_started = False
         self.first_hbase_shell = True
         self.command_counter = 0
@@ -121,13 +119,7 @@ class HBASEUI:
         if input_text.lower() == "help":
             self.Execute(self.show_help())
             return
-
-        if input_text.lower() == "clear":
-            self.result_text.configure(state="normal")
-            self.result_text.delete("1.0", "end")
-            self.result_text.configure(state="disabled")
-            self.command_counter = 0
-        elif input_text.lower() == "cls":
+        if input_text.lower() == "clear" or input_text.lower() == "cls":
             self.result_text.configure(state="normal")
             self.result_text.delete("1.0", "end")
             self.result_text.configure(state="disabled")
