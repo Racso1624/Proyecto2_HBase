@@ -303,12 +303,19 @@ def alter(command):
                             # Remueve la columna de la lista
                             data_table["Column Families"].remove(column_family)
                             # Busca los valores de cada row id con esa columna
+                            empty_rowid = []
                             for row_id in data_table["Rows"]:
                                 key_list = list(data_table["Rows"][row_id].keys())
                                 for i in key_list:
                                     # Si encuentra la columna la elimina
                                     if column_family in i:
                                         del data_table["Rows"][row_id][i]
+                                if data_table["Rows"][row_id] == {}:
+                                    empty_rowid.append(row_id)
+                            
+                            for row_id in empty_rowid:
+                                del data_table["Rows"][row_id]
+
                             # Reescribe el archivo
                             with open(f"./HFiles/{table_name}.json", "w") as file:
                                 json.dump(data_table, file, indent=4)
