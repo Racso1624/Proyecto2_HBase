@@ -347,7 +347,16 @@ def alter(command):
                                 with open(f"./HFiles/{table_name}.json", "w") as file:
                                     json.dump(data_table, file, indent=4)
                                 print("xd")
-                                return f"Column family '{column_family}' updated to '{new_column_family}' in table '{table_name}'."
+                                frozen_values = (
+                                    column_family,
+                                    new_column_family,
+                                    table_name,
+                                )
+
+                                value1, value2, value3 = frozen_values
+                                valor = f"Column family '{value1}' updated to '{value2}' in table '{value3}'."
+                                print(valor)
+                                return valor
                             else:
                                 print("xd2")
                                 return f"New column family '{new_column_family}' already exists in table '{table_name}'."
@@ -357,9 +366,7 @@ def alter(command):
                 else:
                     print("xd4")
                     return f"Table '{table_name}' is not enable."
-            else:
-                print("xd5")
-                return f"Table '{table_name}' does not exist."
+
         else:
             return "Invalid command."
 
