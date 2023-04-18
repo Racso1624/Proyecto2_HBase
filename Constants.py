@@ -45,7 +45,7 @@ commands = [
     "describe",
     "truncate",
     "drop",
-    "drop_all",
+    "dropall",
     "clear",
     "cls",
     "exit",

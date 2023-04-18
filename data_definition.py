@@ -5,6 +5,7 @@ from utils import *
 from time import *
 import os
 from prettytable import PrettyTable
+import re
 
 
 def LimpiarInput(func):
@@ -486,12 +487,19 @@ def drop(command):
             return f"Table {table_name} dropped successfully."
         else:
             return f"Table {table_name} does not exist."
-
+#dropall 'resiland*'
 
 @LimpiarInput
-def drop_all(command):
-    if "drop_all" in command:
+def dropall(command):
+    if "dropall" in command:
+        result = ""
+        command = command.replace("dropall ", "")
+        command = scanWord(command)
         tables = os.listdir("./HFiles")
         for table in tables:
-            os.remove(f"./HFiles/{table}")
-        return f"{len(tables)} row(s) in {len(tables)} table(s) deleted\n"
+            table = table.replace('.json','')
+            matched = re.search(command, table)
+            if matched:
+                os.remove(f"./HFiles/{table}.json")
+                result += f"Table {table} dropped successfully."
+        return result

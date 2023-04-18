@@ -156,8 +156,8 @@ class HBASEUI:
             self.Execute(deleteAll(input_text), input_text.lower())
         elif "drop" in input_text.lower():
             self.Execute(drop(input_text), input_text.lower())
-        elif "drop_all" in input_text.lower():
-            self.Execute(drop_all(input_text), input_text.lower())
+        elif "dropall" in input_text.lower():
+            self.Execute(dropall(input_text), input_text.lower())
         elif input_text.lower() == "exit":
             self.root.destroy()
 
