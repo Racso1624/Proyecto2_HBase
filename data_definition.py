@@ -304,12 +304,18 @@ def alter(command):
                             # Remueve la columna de la lista
                             data_table["Column Families"].remove(column_family)
                             # Busca los valores de cada row id con esa columna
+                            empty_rowid = []
                             for row_id in data_table["Rows"]:
                                 key_list = list(data_table["Rows"][row_id].keys())
                                 for i in key_list:
                                     # Si encuentra la columna la elimina
                                     if column_family in i:
                                         del data_table["Rows"][row_id][i]
+                                if data_table["Rows"][row_id] == {}:
+                                        empty_rowid.append(row_id)
+
+                            for row_id in empty_rowid:
+                                del data_table["Rows"][row_id]
                             # Reescribe el archivo
                             with open(f"./HFiles/{table_name}.json", "w") as file:
                                 json.dump(data_table, file, indent=4)
@@ -367,6 +373,13 @@ def alter(command):
     else:
         return "Invalid command. 'alter' keyword not found."
 
+def list():
+    result = "TABLE \n"
+    tables = os.listdir("./HFiles")
+    for table in tables:
+        table = table.replace('.json','')
+        result = result + table + "\n"
+    return result
 
 @LimpiarInput
 def describe(command):
@@ -396,17 +409,46 @@ def truncate(command):
     if "truncate " in command:
         command = command.replace("truncate ", "")
         table_name = scanWord(command)
+        result = ""
         if checkFile(table_name):
-            disable(f"disable {table_name}")
-            print("La tabla paso a disable")
-            drop(f"drop {table_name}")
-            print("Se hizo drop a la tabla")
-            create(
-                f"create '{table_name}','column_family1','column_family2'"
-            )  # aqui solo me falta acceder a las column families para mandarlas al create
-            print("Se realizo el create")
+            with open(f"./HFiles/{table_name}.json") as file:
+                data_table = json.load(file)
+            columns = data_table["Column Families"]
+            disable(f"disable '{table_name}'")
+            result += "Table is disable\n"
+            drop(f"drop '{table_name}'")
+            result += "Table is drop\n"
+            column_families = ""
+            for i in range(len(columns)):
+                column_families += "'"
+                column_families += columns[i]
+                column_families += "'"
+                if(i != (len(columns) - 1)):
+                    column_families += ","
+            print(column_families)
+            create(f"create '{table_name}',{column_families}")
         else:
             print("Table does not exist.")
+
+@LimpiarInput
+def deleteAll(command):
+    if "deleteall " in command:
+        command = command.replace("deleteall ", "")
+        command_split = command.split(",")
+        # Se obtienen los valores del comando
+        if len(command_split) == 2:
+            table_name = scanWord(command_split[0])
+            row_id = scanWord(command_split[1])
+            if checkFile(table_name):
+                with open(f"./HFiles/{table_name}.json") as file:
+                    data_table = json.load(file)
+                if checkRowId(data_table, row_id):
+                    del data_table["Rows"][row_id]
+
+                # Reescribe el archivo
+                with open(f"./HFiles/{table_name}.json", "w") as file:
+                    json.dump(data_table, file, indent=4)
+                return f"Row ID '{row_id}' deleted from table '{table_name}'."
 
 
 @LimpiarInput

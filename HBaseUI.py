@@ -144,11 +144,14 @@ class HBASEUI:
             resultado = alter(input_text)
             print(resultado)
             self.Execute(resultado, input_text.lower())
-
+        elif "list" == input_text.lower():
+            self.Execute(list(), input_text.lower())
         elif "describe" in input_text.lower():
             self.Execute(describe(input_text), input_text.lower())
         elif "truncate" in input_text.lower():
             self.Execute(truncate(input_text), input_text.lower())
+        elif "deleteall" in input_text.lower():
+            self.Execute(deleteAll(input_text), input_text.lower())
         elif "drop" in input_text.lower():
             self.Execute(drop(input_text), input_text.lower())
         elif "drop_all" in input_text.lower():
