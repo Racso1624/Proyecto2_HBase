@@ -127,37 +127,35 @@ class HBASEUI:
         elif input_text.lower() == "help":
             self.show_help()
         elif "create" in input_text.lower():
-            self.Execute(create(input_text), input_text.lower())
+            self.Execute(create(input_text), input_text)
         elif "put" in input_text.lower():
-            self.Execute(put(input_text), input_text.lower())
+            self.Execute(put(input_text), input_text)
         elif "get" in input_text.lower():
-            self.Execute(get(input_text), input_text.lower())
+            self.Execute(get(input_text), input_text)
         elif "scan" in input_text.lower():
-            self.Execute(scan(input_text), input_text.lower())
+            self.Execute(scan(input_text), input_text)
         elif "enable" in input_text.lower():
-            self.Execute(enable(input_text), input_text.lower())
+            self.Execute(enable(input_text), input_text)
         elif "disable" in input_text.lower():
-            self.Execute(disable(input_text), input_text.lower())
+            self.Execute(disable(input_text), input_text)
         elif "count" in input_text.lower():
-            self.Execute(count(input_text), input_text.lower())
+            self.Execute(count(input_text), input_text)
         elif "alter" in input_text.lower():
-            resultado = alter(input_text)
-            print(resultado)
-            self.Execute(resultado, input_text.lower())
+            self.Execute(alter(input_text), input_text)
         elif "list" == input_text.lower():
-            self.Execute(list(), input_text.lower())
+            self.Execute(listTables(), input_text)
         elif "describe" in input_text.lower():
-            self.Execute(describe(input_text), input_text.lower())
+            self.Execute(describe(input_text), input_text)
         elif "truncate" in input_text.lower():
-            self.Execute(truncate(input_text), input_text.lower())
-        elif "delete" in input_text.lower():
-            self.Execute(delete(input_text), input_text.lower())
+            self.Execute(truncate(input_text), input_text)
+        elif "delete " in input_text.lower():
+            self.Execute(delete(input_text), input_text)
         elif "deleteall" in input_text.lower():
-            self.Execute(deleteAll(input_text), input_text.lower())
-        elif "drop" in input_text.lower():
-            self.Execute(drop(input_text), input_text.lower())
+            self.Execute(deleteAll(input_text), input_text)
+        elif "drop " in input_text.lower():
+            self.Execute(drop(input_text), input_text)
         elif "dropall" in input_text.lower():
-            self.Execute(dropall(input_text), input_text.lower())
+            self.Execute(dropall(input_text), input_text)
         elif input_text.lower() == "exit":
             self.root.destroy()
 

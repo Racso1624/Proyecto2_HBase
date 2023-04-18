@@ -3,6 +3,9 @@
 
 Proyecto que simula HBase Shell en Python.
 
+## Link Video de Youtube:
+
+https://youtu.be/-qZ02wNUd2s
 
 ## Features
 

@@ -278,9 +278,7 @@ def count(command):
 
 
 # Funcion para el comando alter
-@LimpiarInput
 def alter(command):
-    valor = ""
     # Se limpia la entrada del comando
     if "alter " in command:
         # Se verifica y separa el comando
@@ -347,14 +345,14 @@ def alter(command):
                                                 new_column
                                             ] = value
                                             # alter 'resiland','update','data','datos'
-                                # Se ordenan los datos dentro de sus rows
-                                data_table["Rows"][row_id] = dict(
-                                    sorted(data_table["Rows"][row_id].items())
-                                )
+                                if data_table["Rows"] != {}:
+                                    # Se ordenan los datos dentro de sus rows
+                                    data_table["Rows"][row_id] = dict(
+                                        sorted(data_table["Rows"][row_id].items())
+                                    )
                                 # Reescribe el archivo
                                 with open(f"./HFiles/{table_name}.json", "w") as file:
                                     json.dump(data_table, file, indent=4)
-                                valor = f"Column family '{column_family}' updated to '{new_column_family}' in table '{table_name}'."
                                 return f"Column family '{column_family}' updated to '{new_column_family}' in table '{table_name}'."
                             else:
                                 return f"New column family '{new_column_family}' already exists in table '{table_name}'."
@@ -374,7 +372,7 @@ def alter(command):
     else:
         return "Invalid command. 'alter' keyword not found."
 
-def list():
+def listTables():
     result = "TABLE \n"
     tables = os.listdir("./HFiles")
     for table in tables:
@@ -405,7 +403,6 @@ def describe(command):
         return "Invalid command"
 
 
-@LimpiarInput
 def truncate(command):
     if "truncate " in command:
         command = command.replace("truncate ", "")
@@ -415,10 +412,10 @@ def truncate(command):
             with open(f"./HFiles/{table_name}.json") as file:
                 data_table = json.load(file)
             columns = data_table["Column Families"]
-            disable(f"disable '{table_name}'")
-            result += f"Table {table_name} Disable\n"
-            drop(f"drop '{table_name}'")
-            result += f"Table {table_name} dropped successfully.\n"
+            result += disable(f"disable '{table_name}'")
+            result += "\n"
+            result += drop(f"drop '{table_name}'")
+            result += "\n"
             column_families = ""
             for i in range(len(columns)):
                 column_families += "'"
@@ -426,13 +423,12 @@ def truncate(command):
                 column_families += "'"
                 if(i != (len(columns) - 1)):
                     column_families += ","
-            create(f"create '{table_name}',{column_families}")
-            result += f"Table {table_name} created\n"
+            result += create(f"create '{table_name}',{column_families}")
             return result
         else:
             return f"Table {table_name} does not exist."
-# delete 'resiland','Oscar','cursos:bases','1681770629'
-@LimpiarInput
+        
+
 def delete(command):
     if "delete " in command:
         command = command.replace("delete ", "")
@@ -450,13 +446,14 @@ def delete(command):
                     if column in data_table["Rows"][row_id]:
                         if timestamp == data_table["Rows"][row_id][column]["timestamp"]:
                             del data_table["Rows"][row_id][column]
+                            if data_table["Rows"][row_id] == {}:
+                                del data_table["Rows"][row_id]
 
                 # Reescribe el archivo
                 with open(f"./HFiles/{table_name}.json", "w") as file:
                     json.dump(data_table, file, indent=4)
                 return f"Row '{row_id}' deleted from table '{table_name}'."
 
-@LimpiarInput
 def deleteAll(command):
     if "deleteall " in command:
         command = command.replace("deleteall ", "")
@@ -476,8 +473,6 @@ def deleteAll(command):
                     json.dump(data_table, file, indent=4)
                 return f"Row ID '{row_id}' deleted from table '{table_name}'."
 
-
-@LimpiarInput
 def drop(command):
     if "drop " in command:
         command = command.replace("drop ", "")
@@ -487,9 +482,7 @@ def drop(command):
             return f"Table {table_name} dropped successfully."
         else:
             return f"Table {table_name} does not exist."
-#dropall 'resiland*'
 
-@LimpiarInput
 def dropall(command):
     if "dropall" in command:
         result = ""
