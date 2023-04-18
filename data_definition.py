@@ -279,6 +279,7 @@ def count(command):
 # Funcion para el comando alter
 @LimpiarInput
 def alter(command):
+    valor = ""
     # Se limpia la entrada del comando
     if "alter " in command:
         # Se verifica y separa el comando
@@ -303,19 +304,12 @@ def alter(command):
                             # Remueve la columna de la lista
                             data_table["Column Families"].remove(column_family)
                             # Busca los valores de cada row id con esa columna
-                            empty_rowid = []
                             for row_id in data_table["Rows"]:
                                 key_list = list(data_table["Rows"][row_id].keys())
                                 for i in key_list:
                                     # Si encuentra la columna la elimina
                                     if column_family in i:
                                         del data_table["Rows"][row_id][i]
-                                if data_table["Rows"][row_id] == {}:
-                                    empty_rowid.append(row_id)
-                            
-                            for row_id in empty_rowid:
-                                del data_table["Rows"][row_id]
-
                             # Reescribe el archivo
                             with open(f"./HFiles/{table_name}.json", "w") as file:
                                 json.dump(data_table, file, indent=4)
@@ -346,36 +340,32 @@ def alter(command):
                                                 new_column
                                             ] = value
                                             # alter 'resiland','update','data','datos'
-                                    # Se ordenan los datos dentro de sus rows
-                                    data_table["Rows"][row_id] = dict(
-                                        sorted(data_table["Rows"][row_id].items())
-                                    )
+                                # Se ordenan los datos dentro de sus rows
+                                data_table["Rows"][row_id] = dict(
+                                    sorted(data_table["Rows"][row_id].items())
+                                )
                                 # Reescribe el archivo
                                 with open(f"./HFiles/{table_name}.json", "w") as file:
                                     json.dump(data_table, file, indent=4)
-                                print("xd")
-                                frozen_values = (
-                                    column_family,
-                                    new_column_family,
-                                    table_name,
-                                )
-
-                                value1, value2, value3 = frozen_values
-                                valor = f"Column family '{value1}' updated to '{value2}' in table '{value3}'."
-                                print(valor)
-                                return valor
+                                valor = f"Column family '{column_family}' updated to '{new_column_family}' in table '{table_name}'."
+                                return f"Column family '{column_family}' updated to '{new_column_family}' in table '{table_name}'."
                             else:
-                                print("xd2")
                                 return f"New column family '{new_column_family}' already exists in table '{table_name}'."
                         else:
-                            print("xd3")
                             return f"Column family '{column_family}' does not exist in table '{table_name}'."
+                    else:
+                        return f"Invalid action '{action}' for command 'alter'."
                 else:
-                    print("xd4")
-                    return f"Table '{table_name}' is not enable."
+                    return f"Table '{table_name}' is not enabled."
+
+            else:
+                return f"Column updated in table '{table_name}'."
 
         else:
-            return "Invalid command."
+            return "Invalid command format for 'alter' command."
+
+    else:
+        return "Invalid command. 'alter' keyword not found."
 
 
 @LimpiarInput

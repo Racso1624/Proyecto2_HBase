@@ -141,7 +141,10 @@ class HBASEUI:
         elif "count" in input_text.lower():
             self.Execute(count(input_text), input_text.lower())
         elif "alter" in input_text.lower():
-            self.Execute(alter(input_text), input_text.lower())
+            resultado = alter(input_text)
+            print(resultado)
+            self.Execute(resultado, input_text.lower())
+
         elif "describe" in input_text.lower():
             self.Execute(describe(input_text), input_text.lower())
         elif "truncate" in input_text.lower():
