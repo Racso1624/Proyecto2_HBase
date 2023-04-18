@@ -429,6 +429,30 @@ def truncate(command):
             create(f"create '{table_name}',{column_families}")
         else:
             print("Table does not exist.")
+# delete 'resiland','Oscar','cursos:bases','1681770629'
+@LimpiarInput
+def delete(command):
+    if "delete " in command:
+        command = command.replace("delete ", "")
+        command_split = command.split(",")
+        # Se obtienen los valores del comando
+        if len(command_split) == 4:
+            table_name = scanWord(command_split[0])
+            row_id = scanWord(command_split[1])
+            column = scanWord(command_split[2])
+            timestamp = int(scanWord(command_split[3]))
+            if checkFile(table_name):
+                with open(f"./HFiles/{table_name}.json") as file:
+                    data_table = json.load(file)
+                if checkRowId(data_table, row_id):
+                    if column in data_table["Rows"][row_id]:
+                        if timestamp == data_table["Rows"][row_id][column]["timestamp"]:
+                            del data_table["Rows"][row_id][column]
+
+                # Reescribe el archivo
+                with open(f"./HFiles/{table_name}.json", "w") as file:
+                    json.dump(data_table, file, indent=4)
+                return f"Row '{row_id}' deleted from table '{table_name}'."
 
 @LimpiarInput
 def deleteAll(command):

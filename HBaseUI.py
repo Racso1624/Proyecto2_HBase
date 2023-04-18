@@ -150,6 +150,8 @@ class HBASEUI:
             self.Execute(describe(input_text), input_text.lower())
         elif "truncate" in input_text.lower():
             self.Execute(truncate(input_text), input_text.lower())
+        elif "delete" in input_text.lower():
+            self.Execute(delete(input_text), input_text.lower())
         elif "deleteall" in input_text.lower():
             self.Execute(deleteAll(input_text), input_text.lower())
         elif "drop" in input_text.lower():
