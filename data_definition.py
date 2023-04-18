@@ -415,9 +415,9 @@ def truncate(command):
                 data_table = json.load(file)
             columns = data_table["Column Families"]
             disable(f"disable '{table_name}'")
-            result += "Table is disable\n"
+            result += f"Table {table_name} Disable\n"
             drop(f"drop '{table_name}'")
-            result += "Table is drop\n"
+            result += f"Table {table_name} dropped successfully.\n"
             column_families = ""
             for i in range(len(columns)):
                 column_families += "'"
@@ -425,10 +425,11 @@ def truncate(command):
                 column_families += "'"
                 if(i != (len(columns) - 1)):
                     column_families += ","
-            print(column_families)
             create(f"create '{table_name}',{column_families}")
+            result += f"Table {table_name} created\n"
+            return result
         else:
-            print("Table does not exist.")
+            return f"Table {table_name} does not exist."
 # delete 'resiland','Oscar','cursos:bases','1681770629'
 @LimpiarInput
 def delete(command):
